@@ -11,6 +11,7 @@
 	<groupId>com</groupId>
 	<artifactId>MySpring_Boot_aa23v_VotingApp_Final</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>MySpring_Boot_aa23v_VotingApp_Final</name>
 	<description>Voting App</description>
 	<properties>
