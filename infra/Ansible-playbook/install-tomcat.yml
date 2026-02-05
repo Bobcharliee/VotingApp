@@ -1,0 +1,98 @@
+- name: Install and configure Apache Tomcat
+  hosts: tomcat
+  become: yes
+
+  vars:
+    tomcat_version: 10.1.52
+    tomcat_install_dir: /opt/tomcat
+    java_home: /usr/lib/jvm/java-11-amazon-corretto.x86_64
+    tomcat_user: tomcat
+    tomcat_group: tomcat
+
+
+  tasks:
+    - name: Create tomcat group
+      group:
+        name: "{{ tomcat_group }}"
+        state: present
+
+    - name: Create tomcat user
+      user:
+        name: "{{ tomcat_user }}"
+        group: "{{ tomcat_group }}"
+        shell: /bin/false
+        create_home: no
+
+    - name: Download Tomcat
+      get_url:
+        url: "https://dlcdn.apache.org/tomcat/tomcat-10/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+        dest: /tmp/apache-tomcat.tar.gz
+
+    - name: Create Tomcat directory
+      file:
+        path: "{{ tomcat_install_dir }}"
+        state: directory
+
+    - name: Extract Tomcat
+      unarchive:
+        src: /tmp/apache-tomcat.tar.gz
+        dest: "{{ tomcat_install_dir }}"
+        remote_src: yes
+    
+    - name: Set ownership
+      file:
+        path: "{{ tomcat_install_dir }}"
+        owner: "{{ tomcat_user }}"
+        group: "{{ tomcat_group }}"
+        recurse: yes
+
+    - name: Add Tomcat user for deployments
+      lineinfile:
+        path: "{{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}/conf/tomcat-users.xml"
+        line: '<user username="deploy" password="deploypass" roles="manager-gui,manager-script"/>'
+        insertafter: "<tomcat-users>"
+        state: present
+
+    - name: Ensure Tomcat runs as a service
+      copy:
+        dest: /etc/systemd/system/tomcat.service
+        content: |
+          [Unit]
+          Description=Apache Tomcat Web Application Container
+          After=network.target
+
+          [Service]
+          Type=simple
+
+          Environment=JAVA_HOME={{ java_home }}
+          Environment=CATALINA_HOME={{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}
+          Environment=CATALINA_BASE={{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}
+          Environment=CATALINA_PID={{ tomcat_install_dir }}/temp/tomcat.pid
+
+          ExecStart={{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}/bin/catalina.sh run
+          ExecStop={{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}/bin/catalina.sh stop
+          User={{ tomcat_user }}
+          Group={{ tomcat_group }}
+          UMask=0007
+          Restart=on-failure
+          RestartSec=10
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Make Tomcat scripts executable
+      file:
+        path: "{{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}/bin"
+        mode: '0755'
+        recurse: yes
+
+
+    - name: Reload systemd
+      command: systemctl daemon-reload
+
+
+    - name: start Tomcat
+      systemd:
+        name: tomcat
+        state: started
+        enabled: yes

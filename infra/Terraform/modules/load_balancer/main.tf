@@ -60,13 +60,13 @@ resource "aws_lb" "votingApp_lb" {
 # If ec2 isnt listening on 443, health check will fail
 resource "aws_lb_target_group" "votingApp_tg" {
   name     = "votingApp-tg"
-  port     = 443
-  protocol = "HTTPS"
+  port     = 8080
+  protocol = "HTTP"
   vpc_id   = var.vpc_id
 
   health_check {
     path                = "/"
-    protocol            = "HTTPS"
+    protocol            = "HTTP"
     matcher             = "200-399"
     interval            = 30
     timeout             = 5
@@ -81,8 +81,8 @@ resource "aws_lb_target_group" "votingApp_tg" {
 
 resource "aws_lb_listener" "app_server_listener" {
   load_balancer_arn = aws_lb.votingApp_lb.arn
-  port              = "443"
-  protocol          = "HTTPS"
+  port              = "80"
+  protocol          = "HTTP"
   
   default_action {
     type             = "forward"

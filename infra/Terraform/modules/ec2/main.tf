@@ -44,6 +44,7 @@ resource "aws_launch_template" "votingApp_launch_template" {
   name_prefix   = "votingApp-"
   image_id      = var.ami_id
   instance_type = var.instance_type
+  key_name      = "ubuntu-access-key"
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
   }
@@ -72,6 +73,7 @@ resource "aws_autoscaling_group" "votingApp_asg" {
   desired_capacity          = 2
   force_delete              = true
   vpc_zone_identifier       = [var.public_subnet]
+  
 
   launch_template {
     id      = aws_launch_template.votingApp_launch_template.id
@@ -86,6 +88,23 @@ resource "aws_autoscaling_group" "votingApp_asg" {
     value               = "voting_asg_instance"
     propagate_at_launch = true
   }
+}
+
+data "aws_instances" "asg_instances" {
+  filter {
+    name   = "tag:aws:autoscaling:groupName"
+    values = [aws_autoscaling_group.votingApp_asg.name]
+  }
+}
+
+resource "local_file" "ansible_inventory" {
+  content = <<EOT
+[tomcat]
+%{ for ip in data.aws_instances.asg_instances.public_ips ~}
+${ip} ansible_user=ec2-user ansible_ssh_private_key_file=~/ubuntu-access-key.pem
+%{ endfor ~}
+EOT
+  filename = "${path.module}/../../../inventory.ini"
 }
 
 

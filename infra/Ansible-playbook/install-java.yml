@@ -1,0 +1,24 @@
+- name: Install Java 11
+  hosts: tomcat
+  become: yes
+
+  tasks:
+    - name: Update apt cache (Ubuntu/Debian)
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+      
+    - name: Install Java 11 (Ubuntu/Debian)
+      apt:
+        name: openjdk-11-jdk
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install Java 11 (Amazon Linux/RedHat)
+      yum:
+        name: java-11-amazon-corretto
+        state: present
+      when: ansible_os_family == "RedHat"
+
+
+

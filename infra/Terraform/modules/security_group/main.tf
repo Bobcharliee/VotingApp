@@ -44,6 +44,14 @@ resource "aws_security_group" "app_server_sg" {
   }
 
   ingress {
+    description     = "Allow SSH from Anywhere"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description     = "Allow HTTPS from Load Balancer"
     from_port       = 443
     to_port         = 443

@@ -6,7 +6,8 @@ resource "random_password" "password" {
 }
 
 resource "aws_secretsmanager_secret" "db_secrets" {
-  name = "db_secrets_new"
+  name = "db_secrets_1"
+  recovery_window_in_days = 0
 
     tags = {
         Name = "db_secrets"
