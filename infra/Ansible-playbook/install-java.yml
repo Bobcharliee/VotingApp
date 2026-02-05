@@ -8,15 +8,15 @@
         update_cache: yes
       when: ansible_os_family == "Debian"
       
-    - name: Install Java 17 (Ubuntu/Debian)
+    - name: Install Java 11 (Ubuntu/Debian)
       apt:
-        name: openjdk-17-jdk
+        name: openjdk-11-jdk
         state: present
       when: ansible_os_family == "Debian"
 
-    - name: Install Java 17 (Amazon Linux/RedHat)
+    - name: Install Java 11 (Amazon Linux/RedHat)
       yum:
-        name: java-17-amazon-corretto
+        name: java-11-amazon-corretto
         state: present
       when: ansible_os_family == "RedHat"
 
