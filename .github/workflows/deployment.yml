@@ -153,11 +153,11 @@ jobs:
         echo "Full workspace:"
         ls -lh
         echo "---"
-        test -f artifacts/votingapp.war && echo "✓ WAR file found at: $(pwd)/artifacts/votingapp.war" || echo "✗ WAR file NOT FOUND"
+        test -f /votingapp.war && echo "✓ WAR file found at: $(pwd)/votingapp.war" || echo "✗ WAR file NOT FOUND"
 
     # 6. Run Ansible Playbook to deploy WAR
     - name: Deploy WAR to Tomcat
       run: |
         ansible-playbook -i $INVENTORY_FILE $PLAYBOOK_FILE \
           --private-key=~/ubuntu-access-key.pem \
-          -e "war_file=$(pwd)/artifacts/votingapp.war"
+          -e "war_file=$(pwd)/votingapp.war"
