@@ -103,8 +103,9 @@ jobs:
       run: |
         echo "After download - checking artifacts:"
         pwd
-        ls -lh artifacts/ || echo "✗ artifacts/ NOT FOUND"
-        test -f artifacts/votingapp.war && echo "✓ votingapp.war found" || echo "✗ votingapp.war NOT found"
+        cd artifacts
+        ls -lh || echo "✗ artifacts/ NOT FOUND"
+        test -f votingapp.war && echo "✓ votingapp.war found" || echo "✗ votingapp.war NOT found"
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -146,11 +147,8 @@ jobs:
       run: |
         echo "Current directory:"
         pwd
+        cd artifacts
         echo "---"
-        echo "Artifacts directory contents:"
-        ls -lh artifacts/ || echo "artifacts/ NOT FOUND"
-        echo "---"
-        echo "Full workspace:"
         ls -lh
         echo "---"
         test -f /votingapp.war && echo "✓ WAR file found at: /home/runner/work/VotingApp/VotingApp/votingapp.war" || echo "✗ WAR file NOT FOUND"
