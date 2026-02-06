@@ -99,6 +99,13 @@ jobs:
         name: votingapp-war
         path: ./artifacts
 
+    - name: Verify artifact download
+      run: |
+        echo "After download - checking artifacts:"
+        pwd
+        ls -lh artifacts/ || echo "✗ artifacts/ NOT FOUND"
+        test -f artifacts/votingapp.war && echo "✓ votingapp.war found" || echo "✗ votingapp.war NOT found"
+
     - name: Checkout repository
       uses: actions/checkout@v4
 
