@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest 
     needs: build 
     env:
-      INVENTORY_FILE: infra/inventory.ini
+      INVENTORY_FILE: Votingapp/inventory.ini
       PLAYBOOK_FILE: infra/ansible-playbook/deploy-war.yml
       TOMCAT_USER: ec2-user
       TOMCAT_HOST: ${{ secrets.EC2_HOST }}
@@ -84,7 +84,7 @@ jobs:
         path: ./artifacts
 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # 4. Install Ansible
     - name: Install Ansible
