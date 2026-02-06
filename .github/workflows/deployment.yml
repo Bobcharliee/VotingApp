@@ -104,6 +104,7 @@ jobs:
         echo "After download - checking artifacts:"
         pwd
         cd artifacts
+        pwd
         ls -lh || echo "✗ artifacts/ NOT FOUND"
         test -f votingapp.war && echo "✓ votingapp.war found" || echo "✗ votingapp.war NOT found"
 
