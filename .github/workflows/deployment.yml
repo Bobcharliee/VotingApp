@@ -68,11 +68,17 @@ jobs:
         echo "---"
         find . -name "*.war" -type f 2>/dev/null || echo "No WAR files found anywhere"
 
+    - name: Rename WAR to votingapp.war
+      run: |
+        cd target
+        mv MySpring_Boot_aa23v_VotingApp_Final-0.0.1-SNAPSHOT.war votingapp.war
+        ls -lh votingapp.war
+
     - name: Upload WAR artifact 
       uses: actions/upload-artifact@v4
       with:
         name: votingapp-war
-        path: target/*.war
+        path: target/votingapp.war
 
 
   deploy: 
