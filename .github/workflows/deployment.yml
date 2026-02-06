@@ -31,6 +31,9 @@ jobs:
         java-version: 11
 
     # 3. Build WAR using Maven
+    - name: Clean WAR
+      run: mvn clean install
+
     - name: Build WAR
       run: mvn clean package
 
