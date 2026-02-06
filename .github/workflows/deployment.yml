@@ -125,4 +125,4 @@ jobs:
       run: |
         ansible-playbook -i $INVENTORY_FILE $PLAYBOOK_FILE \
           --private-key=~/ubuntu-access-key.pem \
-          -e "war_file=./artifacts/votingapp.war"
+          -e "war_file=$GITHUB_WORKSPACE/artifacts/votingapp.war"
