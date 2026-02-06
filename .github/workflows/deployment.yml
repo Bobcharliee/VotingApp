@@ -70,8 +70,8 @@ jobs:
     runs-on: ubuntu-latest 
     needs: build 
     env:
-      INVENTORY_FILE: Votingapp/inventory.ini
-      PLAYBOOK_FILE: infra/ansible-playbook/deploy-war.yml
+      INVENTORY_FILE: inventory.ini
+      PLAYBOOK_FILE: infra/Ansible-playbook/deploy-war.yml
       TOMCAT_USER: ec2-user
       TOMCAT_HOST: ${{ secrets.EC2_HOST }}
       TOMCAT_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -96,9 +96,9 @@ jobs:
     - name: Configure SSH Key
       run: |
         mkdir -p ~/.ssh
-        # write private key reliably preserving newlines
-        printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ubuntu-access-key.pem
-        chmod 600 ~/.ssh/ubuntu-access-key.pem
+        # write private key reliably preserving newlines to home as inventory references
+        printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/ubuntu-access-key.pem
+        chmod 600 ~/ubuntu-access-key.pem
         # add host key if reachable; don't fail workflow if ssh-keyscan cannot reach host
         ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts || true
 
