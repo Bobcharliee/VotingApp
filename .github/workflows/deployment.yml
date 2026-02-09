@@ -150,11 +150,12 @@ jobs:
       run: |
         echo "Current directory:"
         pwd
+        ls -la
         cd ./artifacts
         echo "---"
         ls -lh
         echo "---"
-        test -f /votingapp.war && echo "✓ WAR file found at: /home/runner/work/VotingApp/VotingApp/votingapp.war" || echo "✗ WAR file NOT FOUND"
+        test -f votingapp.war && echo "✓ WAR file found at: /home/runner/work/VotingApp/VotingApp/artifacts/votingapp.war" || echo "✗ WAR file NOT FOUND"
 
     # 6. Run Ansible Playbook to deploy WAR
     - name: Deploy WAR to Tomcat
