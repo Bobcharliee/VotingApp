@@ -93,6 +93,9 @@ jobs:
       TOMCAT_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
     
     steps: 
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Download WAR artifact 
       uses: actions/download-artifact@v4
       with:
@@ -108,8 +111,7 @@ jobs:
         ls -lh || echo "✗ artifacts/ NOT FOUND"
         test -f votingapp.war && echo "✓ votingapp.war found" || echo "✗ votingapp.war NOT found"
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
+   
 
     - name: Debug - List workspace files
       run: |
