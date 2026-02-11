@@ -79,6 +79,7 @@ jobs:
     needs: build 
     env:
       ANSIBLE_HOST_KEY_CHECKING: "False"
+      INVENTORY_FILE: inventory.ini
       PLAYBOOK_FILE: infra/Ansible-playbook/deploy-war.yml
       TOMCAT_USER: ec2-user
       TOMCAT_HOST: ${{ secrets.EC2_HOST }}
