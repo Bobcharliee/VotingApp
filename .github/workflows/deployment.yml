@@ -84,8 +84,12 @@ jobs:
       TOMCAT_USER: ec2-user
       TOMCAT_HOST: ${{ secrets.EC2_HOST }}
       TOMCAT_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-    
-    steps: 
+
+    steps:
+    # 1. Checkout repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Download WAR artifact 
       uses: actions/download-artifact@v4
       with:
